@@ -1,0 +1,11 @@
+<a href="/">&larr; Back</a>
+<h1>
+    <%= data.name %>
+</h1>
+<article class="item">
+    <%= data.amount %>
+        <%= data.unit %>
+</article>
+<form action="/delete-item/<%= data._id %>?_method=DELETE" method="POST">
+    <input type="submit" value="Delete" class="btn-delete btn">
+</form>

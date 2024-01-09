@@ -1,86 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const Post = require('../models/Post');
+const Item = require('../models/Item');
 
 //Routes:
 
 /*
 * GET
-* HOME
+* Homepage
 */
 router.get('', async (req, res) => {
 
     try {
         const locals = {
-            title: "Node.Js Blog",
-            description: "Simple Blog created with  Node.JS, Express and MongoDB."
+            title: "Node.Js Shoppinglist",
+            description: "Simple shoppinglist created with  Node.JS, Express and MongoDB."
         }
-        let perPage = 10;
-        let page = req.query.page || 1;
-
-        const data = await Post.aggregate([{ $sort: { createdAt: -1 } }])
-            .skip(perPage * page - perPage)
-            .limit(perPage)
-            .exec();
-
-        const count = await Post.countDocuments();
-        const nextPage = parseInt(page) + 1;
-        const hasNextPage = nextPage <= Math.ceil(count / perPage);
-
-        res.render('index', { locals, data, current: page, nextPage: hasNextPage ? nextPage : null, currentRoute: '/' }); //render index page
-    } catch (error) {
-        console.log(error);
-    }
-}); //GET
-
-/*router.get('', async (req, res) => {
-    const locals = {
-        title: "Node.Js Blog",
-        description: "Simple Blog created with  Node.JS, Express and MongoDB."
-    }
-    try {
-        const data = await Post.find();
+        const data = await Item.find();
         res.render('index', { locals, data }); //render index page
-    } catch (error) {
-        console.log(error);
-    }
-}); //GET
-*/
-
-
-/*
-function insertPostData(){
-    Post.insertMany([
-        {
-            title: "Building a blog",
-            body: "This is the body text"
-        },
-        {
-            title: "Building a blog 2",
-            body: "This is the body text 2"
-        }
-    ])
-}
-*/
-//insertPostData();
-
-/**
- * GET
- * Post :id
- */
-router.get('/post/:id', async (req, res) => {
-
-    try {
-
-        let slug = req.params.id;
-        const data = await Post.findById({ _id: slug });
-
-        const locals = {
-            title: data.title, //page title
-            description: "Simple Blog created with  Node.JS, Express and MongoDB." //meta description
-        }
-
-        res.render('post', { locals, data, currentRoute: `/post/${slug}`  }); //render index page
     } catch (error) {
         console.log(error);
     }
@@ -88,39 +24,134 @@ router.get('/post/:id', async (req, res) => {
 
 
 /**
- * POST
- * Post - searchTerm
+ * GET
+ * Item :id
  */
-router.post('/search', async (req, res) => {
+router.get('/item/:id', async (req, res) => {
 
     try {
+        let slug = req.params.id;
+        const data = await Item.findById({ _id: slug });
+
         const locals = {
-            title: "Search",
-            description: "Simple Blog created with  Node.JS, Express and MongoDB."
+            title: data.title, //page title
+            description: "Simple shoppinglist created with Node.JS, Express and MongoDB." //meta description
         }
-        let searchTerm = req.body.searchTerm;
-        const searchNospecialChar = searchTerm.replace(/[^-zA-Z0-9 ]/g, "");
+
+        res.render('item', { locals, data }); //render index page
+    } catch (error) {
+        console.log(error);
+    }
+});
 
 
-        const data = await Post.find({
-            $or: [
-                { title: { $regex: new RegExp(searchNospecialChar, 'i') } }, // enables to search in title...
-                { body: { $regex: new RegExp(searchNospecialChar, 'i') } } // and in the body
-            ]
+/**
+ * GET 
+ * Create new Item
+ */
+router.get('/add-item', async (req, res) => {
+    try {
+        const locals = {
+            title: "Add item",
+            description: "Simple shoppinglist created with  Node.js, Express and MongoDB."
         }
-        );
-        res.render("search", {
-            data, locals
+        const data = await Item.find();
+        res.render('add-item', { locals, data });
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+
+/**
+ * POST 
+ * Create new Item
+ */
+router.post('/add-item', async (req, res) => {
+    try {
+        //save into the database:
+        try {
+            const newItem = new Item({
+                name: req.body.name,
+                amount: req.body.amount,
+                unit: req.body.unit
+            });
+            await Item.create(newItem);
+            res.redirect('/')
+        } catch (error) {
+            console.log(error);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+/**
+ * GET 
+ * Edit Item
+ */
+router.get('/edit-item/:id', async (req, res) => {
+    try {
+        const locals = {
+            title: "Edit item",
+            description: "Simple shoppinglist created with  Node.JS, Express and MongoDB."
+        }
+        const data = await Item.findOne({ _id: req.params.id });
+        res.render('edit-item', {
+            locals,
+            data
         });
     } catch (error) {
         console.log(error);
     }
+});
+
+
+
+/**
+ * PUT 
+ * Edit Item
+ */
+router.put('/edit-item/:id', async (req, res) => {
+    try {
+        await Item.findByIdAndUpdate(req.params.id, {
+            name: req.body.name,
+            amount: req.body.amount,
+            unit: req.body.unit
+        });
+        res.redirect('/');
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+
+/**
+ * DELETE 
+ * Delete Item
+ */
+router.delete('/delete-item/:id', async (req, res) => {
+    try {
+        await Item.deleteOne({ _id: req.params.id });
+        res.redirect('/');
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+
+
+
+/**
+ * GET
+ * Info
+ */
+router.get('/info', async (req, res) => {
+    const locals = {
+        title: "Information", //page title
+        description: "Simple shoppinglist created with Node.JS, Express and MongoDB." //meta description
+    }
+    res.render('info', { locals }); //render info page
 })
-
-
-
-router.get('/about', (req, res) => {
-    res.render('about', {currentRoute: '/about' }); //render about page
-}); //GET
 
 module.exports = router;
