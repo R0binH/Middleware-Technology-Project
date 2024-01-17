@@ -25,17 +25,18 @@ The application was created with reference to Raddy's tutorial (BUT ITS MY OWN W
 ### Create .env file
 Create a .env file to store your MongoDB connection string credentials. Example below:
 
-`MONGODB_URI=mongodb+srv://<username>:<password>@clusterName.xxxxxxx.mongodb.net/blog`
+`MONGODB_URI=mongodb+srv://<username>:<password>@clusterName.xxxxxxx.mongodb.net/shoppinglist`
 
 
 ### Installation
-To install and run this project - install dependencies using *npm install* and then start your server by *npm run dev*:
+To install and run this project - install dependencies using *npm install* and then start your server by *npm run dev* or *npm run start*:
 
 `$ npm install`
 
-`$ npm run dev`
+`$ npm run dev` for development and `$ npm run start` for production 
 
 You can reach the application on port 5000: [http://localhost:5000/](http://localhost:5000/)
 
+___
 
-*last updated: 08. Jan. 2024*
+*last updated: 17. Jan. 2024*
