@@ -33,9 +33,9 @@ To install and run this project - install dependencies using *npm install* and t
 
 `$ npm install`
 
-`$ npm run dev`
+`$ npm run dev` for development and `$ npm run start` for production 
 
 You can reach the application on port 5000: [http://localhost:5000/](http://localhost:5000/)
 
 
-*last updated: 08. Jan. 2024*
+*last updated: 17. Jan. 2024*
