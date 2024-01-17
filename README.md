@@ -29,7 +29,7 @@ Create a .env file to store your MongoDB connection string credentials. Example 
 
 
 ### Installation
-To install and run this project - install dependencies using *npm install* and then start your server by *npm run dev*:
+To install and run this project - install dependencies using *npm install* and then start your server by *npm run dev* or *npm run start*:
 
 `$ npm install`
 
