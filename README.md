@@ -32,6 +32,7 @@ Create a *.env* file to store your MongoDB connection string credentials. Paste 
 
 
 ### Installation
+
 To install and run this project you have to create an Docker-Image:
 
 ```batch
@@ -50,6 +51,7 @@ or
 - ```batch
   docker-compose up
   ```
+
 
 You can reach the application on port 5000: [http://localhost:5000/](http://localhost:5000/)
 
